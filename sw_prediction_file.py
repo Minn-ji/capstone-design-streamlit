@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import pickle
 from sklearn.preprocessing import StandardScaler
+import gdown
+import os
 
 
 def categorize_booked(days):
@@ -92,8 +94,20 @@ def scale_X(df):
     X_scaled = scaler.fit_transform(X)
     return X_scaled
 
-def load_predict_model():
-    with open(file='models/rf_model_best.pkl', mode='rb') as f:
+def load_predict_model():# 모델 경로 및 Google Drive 파일 ID
+    model_path = "models/rf_model_best.pkl"
+    file_id = "13QOYoboEib3Y4P46xihya66b4HNRPwfo"
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    # models 폴더 없으면 생성
+    os.makedirs("models", exist_ok=True)
+
+    # 모델 파일 없을 때만 다운로드
+    if not os.path.exists(model_path):
+        print("📥 모델 다운로드 중...")
+        gdown.download(url, model_path, quiet=False)
+
+    with open(file=model_path, mode='rb') as f:
         rf_loaded_model = pickle.load(f)
     return rf_loaded_model
 
