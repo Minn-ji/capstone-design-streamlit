@@ -206,7 +206,7 @@ def show_city_fee():
     with col2:
         st.markdown("#### 총 매출 비교")
         compare_df = pd.DataFrame({
-            "구분": ["기존 매출", "시뮬레이션 매출"],
+            "구분": ["고정 수수료 매출", "차등 수수료 매출"],
             "매출": [original_total, simulated_total]
         })
 
