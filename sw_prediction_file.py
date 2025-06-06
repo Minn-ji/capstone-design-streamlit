@@ -6,15 +6,6 @@ import gdown
 import os
 
 
-def categorize_booked(days):
-    if days <= 120:
-        return 'short_term'
-    elif days <= 240:
-        return 'mid_term'
-    else:
-        return 'long_term'
-
-
 def make_features(df):
     # 1. 응답률과 수락률 차이 → 호스트의 의사 표현 불일치 탐지
     df['host_response_gap'] = df['host_response_rate'] - df['host_acceptance_rate']

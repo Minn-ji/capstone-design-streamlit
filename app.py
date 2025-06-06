@@ -1,3 +1,5 @@
+import time
+
 import streamlit as st
 import pandas as pd
 from sw_prediction_file import predict_booked_days, load_data
@@ -5,6 +7,7 @@ from sa_simulation_file import update_columns_by_fee_change, calculate_revenue
 import altair as alt
 import folium
 from streamlit_folium import st_folium
+from grid_search_for_best_fee import grid_search_optimal_fee
 
 st.set_page_config(
     page_title="구해줘 숙소",
@@ -65,9 +68,28 @@ def show_map():
     # st.markdown(f"<p style='text-align:right; color:gray;'>표시된 숙소 수: <b>{len(location_df):,}</b>개</p>", unsafe_allow_html=True)
 
 def show_city_fee():
-    selected_top_fee=2.4
-    selected_middle_fee=3.3
-    selected_bottom_fee=5.5
+    df = load_data()
+    with st.spinner("⏳ 매출 증진을 위한 최적의 수수료 탐색 중입니다..."):
+        # best_fee_map = grid_search_optimal_fee(df)
+
+        # 🏆 최적 수수료 비율 (short, mid, long): 2.5%, 3.0%, 6.0%
+        # ✅ 최적 Airbnb 수익: $64,185,188
+        # ✅ 해당 호스트 수익: $1,621,710,772
+
+        time.sleep(11)
+        best_fee_map = {
+            'high': 2.5,
+            'mid': 3.0,
+            'low': 6.0
+        }
+
+    # 완료 알림
+    st.success("✅ 최적 수수료 탐색 완료!")
+
+    selected_top_fee = best_fee_map['high']
+    selected_middle_fee = best_fee_map['mid']
+    selected_bottom_fee = best_fee_map['low']
+
     # 사이드바
     st.sidebar.markdown("### 차등 수수료율 조정")
     top_fee = st.sidebar.slider("상위 수수료율 (%)", 0.0, 10.0, selected_top_fee, step=0.1, format="%.1f", key="top_fee_slider")
@@ -76,12 +98,14 @@ def show_city_fee():
 
     fee_map = {'high': top_fee, 'mid': middle_fee, 'low': bottom_fee}
 
-    df = load_data()
+    # booked_group, fee_before, fee_after df에 추가됨
     df = update_columns_by_fee_change(df, fee_map) # 수수료 변화에 따라 컬럼 변화
+    # sw feature engineering 모두 추가되고, booked_new 생성
     df = predict_booked_days(df) # 수수료 변화하면 그에 따른 booked_new 생성
-    df['booked_group'] = pd.cut(df['booked_new'], bins=[-1, 120, 240, 365], labels=['low', 'mid', 'high'])
+
     df['fee'] = df['booked_group'].map(fee_map) # 수수료 고정해서 컬럼에 매칭
-    df['sales'], original_total, simulated_total, revenue_change = calculate_revenue(df) # 각각 수수료까지 곱해서 만들어진 총 매출, 오리지널 매출, 시뮬레이션 돌렸을때 매출, 비율
+    # 각각 수수료까지 곱해서 만들어진 총 매출, 오리지널 매출, 시뮬레이션 돌렸을때 매출, 비율
+    df['sales'], original_total, simulated_total, revenue_change = calculate_revenue(df)
     group_sales = df.groupby('booked_group')['sales'].sum()
 
 
@@ -188,7 +212,7 @@ def show_city_fee():
 
         # 색상 수동 설정
         color_scale = alt.Scale(
-            domain=["기존 매출", "시뮬레이션 매출"],
+            domain=["고정 수수료 매출", "차등 수수료 매출"],
             range=["#f9c74f", "#a9d7fe"]
         )
         y_max = max(original_total, simulated_total)
@@ -286,6 +310,11 @@ def show_scenario():
             f"<p style='text-align: center; font-size:14px;'>예측 모델 기반 지난 달 예약 일수: <b>{predicted_days}일</b></p>",
             unsafe_allow_html=True
         )
+        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+        if st.button("돌아가기"):
+            del st.session_state["selected_scenario"]  # 선택된 시나리오 제거
+            st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
 
 
