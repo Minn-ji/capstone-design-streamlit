@@ -42,7 +42,7 @@ def scale_X(df, scaler):
 def load_predict_model():# 모델 경로 및 Google Drive 파일 ID
 
     model_path = "models/ensemble_model.pkl" # rf_model_best.pkl"
-    file_id = "13QOYoboEib3Y4P46xihya66b4HNRPwfo"
+    file_id = "1i5AFVYW6gB_PAdYn0sapELEVZhWldfZg"
     url = f"https://drive.google.com/uc?id={file_id}"
 
     # models 폴더 없으면 생성
@@ -55,7 +55,10 @@ def load_predict_model():# 모델 경로 및 Google Drive 파일 ID
 
     with open(model_path, "rb") as f:
         model_bundle = pickle.load(f)
-    return model_bundle
+    return {
+        'model': model_bundle[0],
+        'scaler': model_bundle[1]
+    }
 
 
 def load_data(path='assets/inside_airbnb_merged_final_data.csv'):
@@ -66,6 +69,7 @@ def predict_booked_days(df):
     df = make_features(df)
     model_bundle = load_predict_model()
     scaler = model_bundle['scaler']
+
     X_scaled = scale_X(df, scaler)
 
 
