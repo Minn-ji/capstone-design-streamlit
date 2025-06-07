@@ -80,6 +80,6 @@ def grid_search_optimal_fee(df_raw, fee_range=np.arange(0.00, 0.061, 0.005)):
 
 # 앙상블 모델로 바꿨을 때 1 3 5로 나와야 함!!
 '''
-if __name__ == '__mvain__':
+if __name__ == '__name__':
     df = pd.read_csv('assets/inside_airbnb_merged_final_data.csv')
     grid_search_optimal_fee(df)
