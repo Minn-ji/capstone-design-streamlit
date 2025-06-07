@@ -29,19 +29,19 @@ def grid_search_optimal_fee(df_raw, fee_range=np.arange(0.00, 0.061, 0.005)):
                 }
                 df_changed['booked_group'] = pd.cut(df_changed['booked'], bins=[-1, 120, 240, 365], labels=['low', 'mid', 'high'])
                 df_changed['fee_before'] = 0.033
-                df_changed['fee_after'] = df_changed['booked_group'].map(fee_map).astype(float).clip(lower=0.0)
+                df_changed['fee_rate'] = df_changed['booked_group'].map(fee_map).astype(float).clip(lower=0.0)
 
                 # ✅ 피처 생성 및 정렬
                 df_changed = predict_booked_days(df_changed)
 
                 # ✅ 수익 계산
                 df_changed['simulated_revenue'] = df_changed['price'] * df_changed['booked_new']
-                df_changed['simulated_fee_revenue'] = df_changed['simulated_revenue'] * df_changed['fee_after']
+                df_changed['simulated_fee_revenue'] = df_changed['simulated_revenue'] * df_changed['fee_rate']
                 df_changed['simulated_host_revenue'] = df_changed['simulated_revenue'] - df_changed['simulated_fee_revenue']
 
                 # ✅ 기존 대비 호스트 수익 변화율
                 df_changed['original_revenue'] = df_raw['price'] * df_raw['booked']
-                df_changed['original_fee_revenue'] = df_changed['original_revenue'] * 0.033
+                df_changed['original_fee_revenue'] = df_changed['original_revenue'] * df_changed['fee_before']
                 df_changed['original_host_revenue'] = df_changed['original_revenue'] - df_changed['original_fee_revenue']
 
                 orig_host_total = df_changed['original_host_revenue'].sum()
@@ -77,7 +77,9 @@ def grid_search_optimal_fee(df_raw, fee_range=np.arange(0.00, 0.061, 0.005)):
 🏆 최적 수수료 비율 (short, mid, long): 2.5%, 3.0%, 6.0%
 ✅ 최적 Airbnb 수익: $64,185,188
 ✅ 해당 호스트 수익: $1,621,710,772
+
+# 앙상블 모델로 바꿨을 때 1 3 5로 나와야 함!!
 '''
-if __name__ == '__main__':
+if __name__ == '__mvain__':
     df = pd.read_csv('assets/inside_airbnb_merged_final_data.csv')
     grid_search_optimal_fee(df)
