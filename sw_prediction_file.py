@@ -55,6 +55,7 @@ def load_predict_model():# 모델 경로 및 Google Drive 파일 ID
 
     with open(model_path, "rb") as f:
         model_bundle = pickle.load(f)
+    print("### 모델 번들 : ", model_bundle)
     return model_bundle
 
 
