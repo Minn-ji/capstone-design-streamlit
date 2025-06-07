@@ -28,15 +28,14 @@ def grid_search_optimal_fee(df_raw, fee_range=np.arange(0.00, 0.061, 0.005)):
                     'low': long_fee
                 }
                 df_changed['booked_group'] = pd.cut(df_changed['booked'], bins=[-1, 120, 240, 365], labels=['low', 'mid', 'high'])
-                df_changed['fee_before'] = 0.033
                 df_changed['fee_rate'] = df_changed['booked_group'].map(fee_map).astype(float).clip(lower=0.0)
-
+                df_changed['fee_before'] = 0.033
                 # ✅ 피처 생성 및 정렬
                 df_changed = predict_booked_days(df_changed)
 
                 # ✅ 수익 계산
                 df_changed['simulated_revenue'] = df_changed['price'] * df_changed['booked_new']
-                df_changed['simulated_fee_revenue'] = df_changed['simulated_revenue'] * df_changed['fee_rate']
+                df_changed['simulated_fee_revenue'] = df_changed['simulated_revenue'] * df_changed['fee_before']
                 df_changed['simulated_host_revenue'] = df_changed['simulated_revenue'] - df_changed['simulated_fee_revenue']
 
                 # ✅ 기존 대비 호스트 수익 변화율

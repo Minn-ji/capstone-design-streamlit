@@ -98,7 +98,7 @@ def show_city_fee():
 
     fee_map = {'high': top_fee, 'mid': middle_fee, 'low': bottom_fee}
 
-    # booked_group, fee_before, fee_after df에 추가됨
+    # booked_group, fee_rate df에 추가됨
     df = update_columns_by_fee_change(df, fee_map) # 수수료 변화에 따라 컬럼 변화
     # sw feature engineering 모두 추가되고, booked_new 생성
     df = predict_booked_days(df) # 수수료 변화하면 그에 따른 booked_new 생성

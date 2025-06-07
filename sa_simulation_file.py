@@ -6,10 +6,10 @@ def update_columns_by_fee_change(df, fee_dict):
     # 예약량 기준 그룹 분류
     df['booked_group'] = pd.cut(df['booked'], bins=[-1, 120, 240, 365], labels=['low', 'mid', 'high'])
 
-    
+
     df['fee_before'] = 0.033
-    df['fee_after'] = df['booked_group'].map(fee_dict).astype(float).clip(lower=0.0)
-    fee_delta = (df['fee_after'] - df['fee_before']) * 100 # 수수료 변화 차이
+    df['fee_rate'] = df['booked_group'].map(fee_dict).astype(float).clip(lower=0.0)
+    fee_delta = (df['fee_rate'] - df['fee_before']) * 100 # 수수료 변화 차이
 
     # 변수 변화량 반영 (기존 열 업데이트)
     base_coefficients = {

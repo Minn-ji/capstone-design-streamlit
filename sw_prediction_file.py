@@ -34,7 +34,7 @@ def make_features(df):
     
 
 def scale_X(df, scaler):
-    X = df.drop(columns=['booked', 'id', 'listing_id', 'booked_group'])    # 타겟 나중에 넣어야 됨
+    X = df.drop(columns=['booked', 'id', 'listing_id', 'booked_group', 'fee_rate', 'fee_before'])    # 타겟 나중에 넣어야 됨
 
     X_scaled = scaler.transform(X)
     return X_scaled
@@ -55,7 +55,7 @@ def load_predict_model():# 모델 경로 및 Google Drive 파일 ID
 
     with open(model_path, "rb") as f:
         model_bundle = pickle.load(f)
-    return model
+    return model_bundle
 
 
 def load_data(path='assets/inside_airbnb_merged_final_data.csv'):
