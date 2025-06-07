@@ -55,10 +55,7 @@ def load_predict_model():# 모델 경로 및 Google Drive 파일 ID
 
     with open(model_path, "rb") as f:
         model_bundle = pickle.load(f)
-    return {
-        'model': model_bundle[0],
-        'scaler': model_bundle[1]
-    }
+    return model
 
 
 def load_data(path='assets/inside_airbnb_merged_final_data.csv'):
