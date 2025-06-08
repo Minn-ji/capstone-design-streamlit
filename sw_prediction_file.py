@@ -33,7 +33,7 @@ def make_features(df):
     
 
 def scale_X(df, scaler):
-    X = df.drop(columns=['booked', 'id', 'listing_id', 'fee_before'])    # 타겟 나중에 넣어야 됨'booked_group', 'fee_rate', 이거 삭제x
+    X = df.drop(columns=['booked', 'id', 'listing_id', 'fee_before', 'booked_group', 'fee_rate'])   # 타겟 나중에 넣어야 됨
 
     X_scaled = scaler.transform(X)
     return X_scaled
