@@ -39,9 +39,8 @@ def scale_X(df, scaler):
     return X_scaled
 
 def load_predict_model():# 모델 경로 및 Google Drive 파일 ID
-
     model_path = "models/ensemble_model.pkl" # rf_model_best.pkl"
-    file_id = "1i5AFVYW6gB_PAdYn0sapELEVZhWldfZg"
+    file_id = "1bN03Jkdnf2umoCwOW58Gbqt6ORWE13YI"
     url = f"https://drive.google.com/uc?id={file_id}"
 
     # models 폴더 없으면 생성
