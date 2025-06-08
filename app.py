@@ -69,6 +69,7 @@ def show_map():
 
 def show_city_fee():
     df = load_data()
+    df = df[df['host_days'] >= 365].copy()
     with st.spinner("⏳ 매출 증진을 위한 최적의 수수료 탐색 중입니다..."):
         # best_fee_map = grid_search_optimal_fee(df)
 

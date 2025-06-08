@@ -33,7 +33,7 @@ def make_features(df):
     
 
 def scale_X(df, scaler):
-    X = df.drop(columns=['booked', 'id', 'listing_id', 'booked_group', 'fee_rate', 'fee_before'])    # 타겟 나중에 넣어야 됨
+    X = df.drop(columns=['booked', 'id', 'listing_id', 'fee_before'])    # 타겟 나중에 넣어야 됨'booked_group', 'fee_rate', 이거 삭제x
 
     X_scaled = scaler.transform(X)
     return X_scaled
@@ -68,7 +68,6 @@ def predict_booked_days(df):
     scaler = model_bundle['scaler']
 
     X_scaled = scale_X(df, scaler)
-
 
     rf = model_bundle["rf"]
     lgbm = model_bundle["lgb"]
