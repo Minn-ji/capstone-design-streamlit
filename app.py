@@ -79,9 +79,9 @@ def show_city_fee():
 
         time.sleep(11)
         best_fee_map = {
-            'high': 2.3,
-            'mid': 3.1,
-            'low': 4.1
+            'high': 3.0,
+            'mid': 3.2,
+            'low': 4.0
         }
 
     # 완료 알림
